@@ -9,22 +9,60 @@ Phonebook with new options to search, sort, randomize, and delete.
 #include <stdlib.h>
 #include <time.h>
 
+#define MAX_CONTACTS 100 
+
 typedef struct person{
   char firstName[20];
   char lastName[20];
   char phoneNumber[15];
 }contact;
 
-//Function prototypes
+
 void addFriend(contact **phoneBook, int *contactCount);
 
 int compare(const void *a, const void *b);
+
+void saveContacts(contact phoneBook[],int contactCount,char* fileName) {
+	FILE *fp=fopen(fileName,"w");
+    if(fp==NULL){
+      printf("Error opening the file");
+	  return;
+	}
+
+  for(int i=0;i<contactCount;i++) {
+  	  fprintf(fp,"%s %s %s",phoneBook[i].firstName,phoneBook[i].lastName,phoneBook[i].phoneNumber);
+  }
+  
+//  Closing the stream
+  fclose(fp);
+}
+
+int loadContacts(contact phoneBook[],char* fileName) {
+int contactCount = 0;  
+//Open Stream
+  FILE* fp=fopen(fileName,"r");
+  if (fp==NULL) {
+  	printf("Error in opening %s",fileName);
+  	return 0;
+  }
+//read info
+
+while(fscanf(fp,"%s %s %s",phoneBook[contactCount].firstName,phoneBook[contactCount].lastName,phoneBook[contactCount].phoneNumber) == 3) {
+  contactCount ++;
+//  if(contactCount>=100) {
+//  	printf("Array is full.\n");
+//  	break;
+//  }
+}
+fclose(fp);
+return contactCount;
+}
 
 //Main
 int main() {
 
 int r, found, contactCount = 0, arraySize = 10;
-char firstName[20], lastName[20];
+char firstName[20], lastName[20], fileName[50];
 int *pCount = &contactCount;
 
 contact *phoneBook = NULL;
@@ -40,7 +78,9 @@ printf("3) Show phonebook\n");
 printf("4) Search\n");
 printf("5) Sort\n");
 printf("6) Random\n");
-printf("7) Delete Phonebook");
+printf("7) Save Contacts\n");
+printf("8) Load Contact List\n");
+printf("9) Delete Phonebook");
 
 printf("\nWhat do you want to do?\n");
 scanf("%d",&menuInput);
@@ -115,8 +155,23 @@ switch (menuInput)
     r = rand() % (*pCount);
     printf("%s %s %s\n", phoneBook[r].firstName, phoneBook[r].lastName, phoneBook[r].phoneNumber);
     break;
+//Save Phone Book
+  case 7:
+    printf("What would you like to name the file?");
+    scanf("%s",fileName);
+    strcat(fileName, ".txt");
+    saveContacts(phoneBook,contactCount,fileName);
+  break;
+//Load Phone Book
+  case 8:
+    phoneBook = (contact*)malloc(MAX_CONTACTS* sizeof(contact));
+    printf("What is the file name you would like to load?");
+    scanf("%s",fileName);
+    strcat(fileName, ".txt");
+    contactCount = loadContacts(phoneBook,fileName);
+  break;
 //Delete Phone Book  
-   case 7:
+   case 9:
     free(phoneBook);
     contactCount = 0;
     phoneBook = NULL;
@@ -124,6 +179,7 @@ switch (menuInput)
     break;
   }
  }	
+free(phoneBook);
 return 0;
 }
 
