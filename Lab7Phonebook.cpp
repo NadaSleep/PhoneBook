@@ -30,7 +30,7 @@ void saveContacts(contact phoneBook[],int contactCount,char* fileName) {
 	}
 
   for(int i=0;i<contactCount;i++) {
-  	  fprintf(fp,"%s %s %s",phoneBook[i].firstName,phoneBook[i].lastName,phoneBook[i].phoneNumber);
+  	  fprintf(fp,"%s %s %s\n",phoneBook[i].firstName,phoneBook[i].lastName,phoneBook[i].phoneNumber);
   }
   
 //  Closing the stream
@@ -157,7 +157,7 @@ switch (menuInput)
     break;
 //Save Phone Book
   case 7:
-    printf("What would you like to name the file?");
+    printf("What would you like to name the file?\n");
     scanf("%s",fileName);
     strcat(fileName, ".txt");
     saveContacts(phoneBook,contactCount,fileName);
@@ -165,7 +165,7 @@ switch (menuInput)
 //Load Phone Book
   case 8:
     phoneBook = (contact*)malloc(MAX_CONTACTS* sizeof(contact));
-    printf("What is the file name you would like to load?");
+    printf("What is the file name you would like to load?\n");
     scanf("%s",fileName);
     strcat(fileName, ".txt");
     contactCount = loadContacts(phoneBook,fileName);
