@@ -17,46 +17,11 @@ typedef struct person{
   char phoneNumber[15];
 }contact;
 
-
+//Function Prototypes
 void addFriend(contact **phoneBook, int *contactCount);
-
 int compare(const void *a, const void *b);
-
-void saveContacts(contact phoneBook[],int contactCount,char* fileName) {
-	FILE *fp=fopen(fileName,"w");
-    if(fp==NULL){
-      printf("Error opening the file");
-	  return;
-	}
-
-  for(int i=0;i<contactCount;i++) {
-  	  fprintf(fp,"%s %s %s\n",phoneBook[i].firstName,phoneBook[i].lastName,phoneBook[i].phoneNumber);
-  }
-  
-//  Closing the stream
-  fclose(fp);
-}
-
-int loadContacts(contact phoneBook[],char* fileName) {
-int contactCount = 0;  
-//Open Stream
-  FILE* fp=fopen(fileName,"r");
-  if (fp==NULL) {
-  	printf("Error in opening %s",fileName);
-  	return 0;
-  }
-//read info
-
-while(fscanf(fp,"%s %s %s",phoneBook[contactCount].firstName,phoneBook[contactCount].lastName,phoneBook[contactCount].phoneNumber) == 3) {
-  contactCount ++;
-//  if(contactCount>=100) {
-//  	printf("Array is full.\n");
-//  	break;
-//  }
-}
-fclose(fp);
-return contactCount;
-}
+void saveContacts(contact phoneBook[],int contactCount,char* fileName);
+int loadContacts(contact phoneBook[],char* fileName);
 
 //Main
 int main() {
@@ -207,4 +172,33 @@ void addFriend(contact **phoneBook, int *contactCount) {
 	(*contactCount)++;
 
     printf("\nadded\n");
+}
+//Function def to Save Contacts
+void saveContacts(contact phoneBook[],int contactCount,char* fileName) {
+	FILE *fp=fopen(fileName,"w");
+    if(fp==NULL){
+      printf("Error opening the file");
+	  return;
+	}
+
+  for(int i=0;i<contactCount;i++) {
+  	  fprintf(fp,"%s %s %s\n",phoneBook[i].firstName,phoneBook[i].lastName,phoneBook[i].phoneNumber);
+  }
+  fclose(fp);
+}
+
+//Function def to Load Contacts
+int loadContacts(contact phoneBook[],char* fileName) {
+int contactCount = 0;  
+//Open Stream
+  FILE* fp=fopen(fileName,"r");
+  if (fp==NULL) {
+  	printf("Error in opening %s",fileName);
+  	return 0;
+  }
+while(fscanf(fp,"%s %s %s",phoneBook[contactCount].firstName,phoneBook[contactCount].lastName,phoneBook[contactCount].phoneNumber) == 3) {
+  contactCount ++;
+}
+fclose(fp);
+return contactCount;
 }
